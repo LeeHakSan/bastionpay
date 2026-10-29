@@ -35,6 +35,22 @@ public interface SecurityEventRepository extends JpaRepository<SecurityEventEnti
         LocalDateTime getLast();
     }
 
+    /** 시간 구간별·종류별·심각도별 건수. bucket 은 (UTC 초 + offset) / sec 의 몫이라, offset 에 +9시간을 주면 한국 시간 경계로 나뉜다. */
+    interface BucketCount {
+        Number getBucket();
+
+        String getType();
+
+        String getSeverity();
+
+        long getCnt();
+    }
+
+    @Query(value = "select floor((timestampdiff(second, '1970-01-01 00:00:00', occurred_at) + :offset) / :sec) as bucket, "
+            + "event_type as type, severity as severity, count(*) as cnt from security_event where occurred_at >= :since "
+            + "group by bucket, event_type, severity", nativeQuery = true)
+    List<BucketCount> countByBucket(@Param("since") LocalDateTime since, @Param("sec") long sec, @Param("offset") long offset);
+
     /** 기간 안의 이벤트 종류별 건수(많은 순). */
     @Query("select e.eventType as type, count(e) as cnt from SecurityEventEntity e "
             + "where e.occurredAt >= :since group by e.eventType order by count(e) desc")

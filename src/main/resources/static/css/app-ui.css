@@ -256,3 +256,17 @@ button.row__action:hover { background: var(--navy-900); }
 .pager__link[aria-current="page"] { color: var(--white); background: var(--navy-900); border-color: var(--navy-900); font-weight: 700; }
 .pager__gap { display: inline-grid; place-items: center; min-width: 1.5rem; color: var(--ink-2); }
 .pager a:focus-visible { outline: 2px solid var(--navy-900); outline-offset: 2px; }
+
+/* 보안 대시보드 그래프: 카드 없이 구역 제목 아래에 그래프만 둔다. 색은 심각도 태그와 같은 계열을 쓴다 */
+.charts { margin-bottom: clamp(2.75rem, 5vw, 4rem); }
+.chart__frame { position: relative; height: 15rem; }
+.chart__frame--tall { height: 17rem; }
+.chart__frame canvas { display: block; }
+.chart__error { margin-top: 1.25rem; font-weight: 600; color: #a4262c; }
+.chart__empty { display: grid; place-items: center; height: 100%; margin: 0; color: var(--ink-2); border-top: 1px solid var(--line); }
+
+/* 그래프 상세 화면: 같은 그래프를 크게, 그 아래에 그래프가 센 이벤트 목록 */
+.chart__frame--large { height: clamp(20rem, 52vh, 30rem); }
+.graph__back { margin: 0 0 1.25rem; font-size: 0.9375rem; }
+.graph__sel { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 0.6rem; margin: 0.25rem 0 1rem; color: var(--ink-2); font-size: 0.9375rem; }
+.graph__sel .tag { margin-left: 0; color: var(--ink); border-color: var(--navy-900); font-weight: 700; }

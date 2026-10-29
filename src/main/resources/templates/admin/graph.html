@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head(${kind.title()}, 'app-ui,auth')}"></head>
+<body>
+<a class="skip-link" href="#main">본문 바로가기</a>
+<div th:replace="~{fragments/header :: header}"></div>
+<main id="main" class="app">
+  <div class="wrap">
+    <div class="app__inner app__inner--wide">
+      <div class="app__head app__head--split">
+        <div>
+          <h1 th:text="${kind.title()}">이벤트 추이</h1>
+          <p th:text="${kind.description()}">그래프 설명</p>
+        </div>
+        <nav class="range" aria-label="조회 기간">
+          <a th:each="r : ${ranges}" th:href="@{/admin/security/graph/{k}(k=${kind.path()}, range=${r.code()})}" th:text="${r.label()}"
+             th:attr="aria-current=${r.code() == range} ? 'page'">24시간</a>
+        </nav>
+      </div>
+      <div th:replace="~{admin/tabs :: tabs(${tab})}"></div>
+      <p class="graph__back"><a class="type-link" th:href="@{/admin/security(range=${range})}">← 개요로 돌아가기</a></p>
+
+      <!-- 큰 그래프: 막대·조각을 누르면 아래 목록이 그 조건으로 걸러진다(스크립트가 같은 주소에 조건을 붙여 다시 연다) -->
+      <section class="charts charts--detail" data-charts data-mode="detail" th:data-kind="${kind.path()}"
+               th:data-src="@{/admin/security/charts(range=${range})}"
+               th:data-detail="@{/admin/security/graph/{k}(k=${kind.path()}, range=${range})}"
+               th:data-sel-from="${selFrom}" th:data-sel-series="${selSeries}" th:data-sel-type="${selType}" th:data-sel-ip="${selIp}"
+               aria-labelledby="h-graph">
+        <div class="block">
+          <div class="block__head"><h2 id="h-graph"><span th:text="${kind.title()}">이벤트 추이</span> <span class="count" th:id="'count-' + ${kind.path()}" th:text="'최근 ' + ${rangeLabel}">최근 24시간</span></h2></div>
+          <div class="chart__frame chart__frame--large"><canvas th:id="'chart-' + ${kind.path()}" role="img" th:attr="aria-label=${kind.title()} + ' 그래프'"></canvas></div>
+        </div>
+        <p class="chart__error" id="chart-error" role="status" hidden>그래프를 불러오지 못했습니다. 아래 목록으로 같은 내용을 확인할 수 있습니다.</p>
+        <noscript><p class="chart__error">그래프는 자바스크립트가 켜져 있어야 보입니다. 아래 목록으로 같은 내용을 확인할 수 있습니다.</p></noscript>
+      </section>
+
+      <section class="block block--gap" aria-labelledby="h-list">
+        <div class="block__head">
+          <h2 id="h-list">이 그래프의 이벤트 <span class="count" th:text="${#numbers.formatInteger(result.total, 1, 'COMMA')} + '건'">0건</span></h2>
+          <a class="block__more" th:href="@{/admin/security/events(range=${range})}">이벤트 탭에서 보기</a>
+        </div>
+        <p class="graph__sel" th:if="${!tags.isEmpty()}">
+          <span>선택한 조건</span>
+          <span class="tag" th:each="t : ${tags}" th:text="${t}">10.29 14시</span>
+          <a class="type-link" th:href="@{/admin/security/graph/{k}(k=${kind.path()}, range=${range})}">선택 해제</a>
+        </p>
+        <p class="field__hint" th:if="${tags.isEmpty()}">그래프의 막대나 조각을 누르면 그 조건의 이벤트만 볼 수 있습니다.</p>
+        <p class="empty" th:if="${result.rows.isEmpty()}">조건에 맞는 이벤트가 없습니다. 기간을 늘리거나 선택을 해제해 보세요.</p>
+        <table class="tx" th:unless="${result.rows.isEmpty()}" th:replace="~{admin/event-table :: table(${result.rows})}"></table>
+        <div th:replace="~{fragments/pager :: pager(${pager})}"></div>
+      </section>
+    </div>
+  </div>
+</main>
+<div th:replace="~{fragments/footer :: footer}"></div>
+<script th:src="@{/js/vendor/chart.umd.js}" defer></script>
+<script th:src="@{/js/admin-charts.js}" defer></script>
+</body>
+</html>

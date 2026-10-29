@@ -113,6 +113,9 @@ Graylog·Wazuh·n8n 연동에 쓰는 BastionPay 쪽 구현 명세다. 실제로 
 | 감사 기록 | `GET /admin/security/audit` | `range` `actor`(ADMIN\|API\|SYSTEM) `action` `target`(회원 번호) | 10건 |
 
 - **이벤트 분류**(`SecurityEventType.Category`): 인증·세션 / 접근 제어 / 이체 / 오픈뱅킹 / 계정·권한 / 보안 대응. 모든 이벤트 종류는 정확히 한 분류에 속한다. 종류(`type`)를 고르면 분류보다 종류가 우선한다.
+- 개요 맨 위에 그래프 4개가 있다(Chart.js, `static/js/vendor/chart.umd.js` 4.4.7 을 파일로 두고 CDN 은 쓰지 않는다. CSP 때문에 인라인 스크립트 없이 `static/js/admin-charts.js` 가 그린다): ① 이벤트 추이(심각도별 누적 막대) ② 이체 결과 추이(완료·실패·환불·검토 필요) ③ 이벤트 종류별 비율(많은 6개 + 기타) ④ 로그인 실패 상위 IP 8개. 기간 선택(1시간·24시간·7일)에 따라 5분·1시간·하루(한국 시간 경계) 단위로 나눈다. 데이터는 `GET /admin/security/charts?range=` (관리자 전용 JSON, `SecurityChartService`)에서 가져오고, 스크립트가 실패해도 아래 목록과 표는 그대로 보인다.
+- 그래프에 마우스를 올리면 그 막대·조각만 진하게 보이고 나머지는 흐려지며 커서가 손가락 모양이 된다(툴팁에 "눌러서 크게 보기" 안내). 그래프를 누르거나 머리줄의 "크게 보기"를 누르면 그래프 전용 상세 화면 `GET /admin/security/graph/{timeline|transfers|types|ips}?range=`로 간다. 상세 화면은 같은 그래프를 크게 보여 주고, 그 아래에 그래프가 센 이벤트를 10건씩 나열한다(`AdminGraphController`, `SecurityEventSearchService.searchBy`).
+- 상세 화면에서 막대·조각을 누르면 같은 주소에 조건이 붙어 다시 열리고 목록이 걸러진다: 이벤트 추이·이체 결과는 `from`(시간 구간 시작, UTC epoch 초)·`series`(심각도 또는 COMPLETED·FAILED·REFUNDED·REVIEW), 종류별 비율은 `type`(이벤트 종류 또는 OTHER=상위 6개 외), 로그인 실패 IP는 `ip`. 고른 조건은 "선택한 조건"으로 보이고 "선택 해제"로 푼다. 잘못된 값은 오류 없이 무시한다.
 - 개요의 "분류별 이벤트"는 분류를 펼치면 종류별 건수가 나오고, 누르면 이벤트 탭이 그 조건으로 열린다. 로그인 실패 상위 IP·계정은 5개만 보이고 "집계 보기"로 전체를 본다.
 - 형식이 틀린 IP·회원 번호는 조건을 무시하지 않고 안내와 함께 결과를 비운다(전체가 나와 오해하지 않게). 알 수 없는 분류·종류·심각도는 "전체"로 본다. 쪽 번호가 범위를 벗어나면 마지막 쪽으로 맞춘다.
 - 집계는 묶음을 최대 1,000개까지 가져와 메모리에서 10개씩 자른다(그 이상은 기간을 줄여서 본다).

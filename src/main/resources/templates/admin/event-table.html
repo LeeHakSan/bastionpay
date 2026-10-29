@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<body>
+<!-- 보안 이벤트 목록 표(그래프 상세 화면에서 쓴다. 이벤트 탭의 표와 같은 열) -->
+<table class="tx" th:fragment="table(rows)">
+  <caption class="sr-only">보안 이벤트</caption>
+  <thead><tr><th scope="col">시각(KST)</th><th scope="col">이벤트</th><th scope="col">심각도</th><th scope="col">결과</th><th scope="col">출발지 IP</th><th scope="col">회원</th><th scope="col">사유·대상</th></tr></thead>
+  <tbody>
+    <tr th:each="e : ${rows}">
+      <td class="tx__date" data-label="시각" th:text="${e.time}">10.21 16:00:00</td>
+      <td data-label="이벤트" th:text="${e.type}">LOGIN_FAILURE</td>
+      <td data-label="심각도"><span class="tag" th:classappend="'tag--' + ${#strings.toLowerCase(e.severity.name())}" th:text="${e.severity.name()}">LOW</span></td>
+      <td data-label="결과" th:text="${e.outcome}">FAILURE</td>
+      <td class="num-text" data-label="출발지 IP" th:text="${e.sourceIp} ?: '-'">127.0.0.1</td>
+      <td class="num-text" data-label="회원" th:text="${e.member} ?: '-'">#5</td>
+      <td class="tx__after" data-label="사유·대상"><span th:text="${e.reason} ?: '-'">BAD_CREDENTIALS</span><small class="sub" th:if="${e.target}" th:text="${e.target}">GET /admin</small></td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>
