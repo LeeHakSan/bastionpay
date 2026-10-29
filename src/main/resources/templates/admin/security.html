@@ -21,6 +21,36 @@
 
       <p class="notice" role="status" th:if="${notice}" th:text="${notice}">안내</p>
 
+      <!-- 그래프: 화면에서 가장 먼저 보인다. 데이터는 스크립트가 JSON 으로 불러 그린다(CSP 때문에 인라인 스크립트는 쓰지 않는다) -->
+      <section class="charts" data-charts th:data-src="@{/admin/security/charts(range=${d.range.code()})}" aria-label="보안 이벤트 그래프">
+        <div class="app__cols app__cols--even">
+          <section class="block" aria-labelledby="h-c-line">
+            <div class="block__head"><h2 id="h-c-line">이벤트 추이 <span class="count" id="count-timeline" th:text="'최근 ' + ${d.range.label()} + ' · 심각도별'">최근 24시간 · 심각도별</span></h2>
+              <a class="block__more" th:href="@{/admin/security/graph/timeline(range=${d.range.code()})}">크게 보기</a></div>
+            <div class="chart__frame" th:data-detail="@{/admin/security/graph/timeline(range=${d.range.code()})}"><canvas id="chart-timeline" role="img" aria-label="시간대별 보안 이벤트 건수를 심각도별로 쌓은 막대 그래프"></canvas></div>
+          </section>
+          <section class="block" aria-labelledby="h-c-transfer">
+            <div class="block__head"><h2 id="h-c-transfer">이체 결과 추이 <span class="count" id="count-transfers" th:text="'최근 ' + ${d.range.label()}">최근 24시간</span></h2>
+              <a class="block__more" th:href="@{/admin/security/graph/transfers(range=${d.range.code()})}">크게 보기</a></div>
+            <div class="chart__frame" th:data-detail="@{/admin/security/graph/transfers(range=${d.range.code()})}"><canvas id="chart-transfers" role="img" aria-label="시간대별 이체 결과(완료, 실패, 환불, 검토 필요) 막대 그래프"></canvas></div>
+          </section>
+        </div>
+        <div class="app__cols app__cols--even block--gap">
+          <section class="block" aria-labelledby="h-c-types">
+            <div class="block__head"><h2 id="h-c-types">이벤트 종류별 비율 <span class="count" id="count-types" th:text="'최근 ' + ${d.range.label()}">최근 24시간</span></h2>
+              <a class="block__more" th:href="@{/admin/security/graph/types(range=${d.range.code()})}">크게 보기</a></div>
+            <div class="chart__frame chart__frame--tall" th:data-detail="@{/admin/security/graph/types(range=${d.range.code()})}"><canvas id="chart-types" role="img" aria-label="이벤트 종류별 비율 도넛 그래프"></canvas></div>
+          </section>
+          <section class="block" aria-labelledby="h-c-ips">
+            <div class="block__head"><h2 id="h-c-ips">로그인 실패 상위 IP <span class="count" th:text="'최근 ' + ${d.range.label()}">최근 24시간</span></h2>
+              <a class="block__more" th:href="@{/admin/security/graph/ips(range=${d.range.code()})}">크게 보기</a></div>
+            <div class="chart__frame chart__frame--tall" th:data-detail="@{/admin/security/graph/ips(range=${d.range.code()})}"><canvas id="chart-ips" role="img" aria-label="로그인 실패가 많은 출발지 IP 막대 그래프"></canvas></div>
+          </section>
+        </div>
+        <p class="chart__error" id="chart-error" role="status" hidden>그래프를 불러오지 못했습니다. 아래 목록과 표로 같은 내용을 확인할 수 있습니다.</p>
+        <noscript><p class="chart__error">그래프는 자바스크립트가 켜져 있어야 보입니다. 아래 목록과 표로 같은 내용을 확인할 수 있습니다.</p></noscript>
+      </section>
+
       <!-- 지금 사람이 봐야 하는 것 -->
       <div class="app__cols app__cols--even">
         <section class="block" aria-labelledby="h-review">
@@ -143,5 +173,7 @@
   </div>
 </main>
 <div th:replace="~{fragments/footer :: footer}"></div>
+<script th:src="@{/js/vendor/chart.umd.js}" defer></script>
+<script th:src="@{/js/admin-charts.js}" defer></script>
 </body>
 </html>
