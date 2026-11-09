@@ -3,7 +3,7 @@
 > TEAM KAVANAH · 오픈뱅킹·가상계좌 서비스를 지키는 웹 방어 · 망 분리 · 관제 · 자동 대응 체계
 > 정리일 2026-11-09
 
-> 개인 포트폴리오 문서: [서효상 담당 범위와 기여 정리](docs/PORTFOLIO-SEO-HYOSANG.md) · [처음부터 설치·실행하기](docs/SETUP.md)
+> 설치 안내: [처음부터 설치·실행하기](docs/SETUP.md)
 >
 > 팀 원본 저장소: [LeeHakSan/bastionpay](https://github.com/LeeHakSan/bastionpay)
 
