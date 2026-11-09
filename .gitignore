@@ -48,6 +48,8 @@ application-*-secret.yaml
 *.key
 *.crt
 *.csr
+*.bak
+**/*webhook*key*.txt
 
 ### Logs ###
 *.log
