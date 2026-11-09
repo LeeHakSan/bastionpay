@@ -101,10 +101,12 @@ Set-Location mock-openbanking
 | Graylog | [`_graylog/`](../_graylog/) | Web UI 9000, Beats 5044, GELF UDP 12201 |
 | Wazuh | [`_wazuh/`](../_wazuh/) | Agent/Manager 1514–1515, 설정에 기록된 n8n Webhook |
 | n8n | [`_n8n/`](../_n8n/) | 5678, Graylog/Wazuh Webhook 두 개 |
-| pfSense | [`_pfSense/`](../_pfSense/) | 관리 GUI 10.10.10.1, OpenVPN TAP UDP 1194–1196 |
+| pfSense | [README 망 구성](../README.md#6-b-pfsense-망-구성) | 관리 GUI 10.10.10.1, OpenVPN TAP UDP 1194–1196. 키가 포함된 XML 백업은 배포하지 않음 |
 | Filebeat | [`ops/filebeat.yml`](../ops/filebeat.yml) | Graylog Beats 192.168.3.16:5044 |
 
 IP 주소와 수집 대상은 실습망의 현재 배치에 종속됩니다. 새 환경에서는 설정 파일의 주소·인증서·웹훅 키를 반드시 로컬 값으로 교체하고, 공개 저장소에는 실제 키를 커밋하지 않습니다.
+
+과거에 공개된 pfSense 백업에는 OpenVPN 정적 키, CA 및 서버·클라이언트 개인 키, 관리자 비밀번호 해시가 포함되어 있었습니다. 파일을 현재 트리에서 제거해도 Git 기록의 이전 커밋에는 남습니다. 해당 키·인증서·관리자 비밀번호는 실습 장비에서 폐기하고 재발급·변경해야 합니다. 새 백업은 비공개로 보관하세요.
 
 ## 8. 재현 범위와 미완료 항목
 

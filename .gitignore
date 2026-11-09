@@ -50,6 +50,7 @@ application-*-secret.yaml
 *.csr
 *.bak
 **/*webhook*key*.txt
+_pfSense/config-*.xml
 
 ### Logs ###
 *.log
